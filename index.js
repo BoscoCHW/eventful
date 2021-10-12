@@ -7,6 +7,7 @@ const ejsLayouts = require("express-ejs-layouts");
 const eventController = require("./controller/event_controller");
 const authController = require("./controller/auth_controller");
 const { ensureAuthenticated, forwardAuthenticated } = require("./middleware/checkAuth");
+const dbConfig = require("./config/database");
 const port = process.env.PORT || 3001;
 
 // Session
@@ -69,7 +70,7 @@ app.get("/prevMonth", eventController.prevMonth)
 
 // Start of Weather API route
 app.get("/scripts/weather", (req, res) => {
-    res.sendFile(path.join(__dirname, "/views/event/scripts/weather.js"), err => console.log(err));
+    res.sendFile(path.join(__dirname, "/views/event/scripts/weather.js"), err => console.log(err?.message));
 })
 // End of Weather API route
 
@@ -94,10 +95,11 @@ app.get("/logout", (req, res) => {
 
 // Set and use port 3001
 
-app.listen(port, function() {
-    console.log(
-        "Server running. Visit: localhost:3001/events in your browser 🚀"
-    );
-});
+dbConfig.connect(process.env.MONGO_URI)
+    .then(() => app.listen(port, () => console.log("Server running. Visit: localhost:3001/events in your browser 🚀")))
+    .catch((err) => {
+        console.log("unable to start the serverL " + err);
+        process.exit();
+    });
 
 module.exports = app

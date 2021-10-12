@@ -1,8 +1,8 @@
-const userModel = require("../database").userModel;
+const UserData = require("../models/userDataModel");
 
 // check if user's email exist and also check user's password
-const getUserByEmailIdAndPassword = (email, password) => {
-  const user = userModel.findOne(email);
+const getUserByEmailIdAndPassword = async (email, password) => {
+  const user = await UserData.findOne({email: email}).exec();
   if (user) {
     if (isUserValid(user, password)) {
       return user;
@@ -12,8 +12,8 @@ const getUserByEmailIdAndPassword = (email, password) => {
 };
 
 // see if user exists based on their id
-const getUserById = (id) => {
-  const user = userModel.findById(id);
+const getUserById = async (id) => {
+  const user = await UserData.findById(id).exec();
   if (user) {
     return user;
   }

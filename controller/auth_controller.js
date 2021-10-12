@@ -1,5 +1,6 @@
-let database = require("../database");
-let update = require("../database").writeJSON;
+// let database = require("../database");
+// let update = require("../database").writeJSON;
+const UserData = require("../models/userDataModel");
 
 let authController = {
     login: (req, res) => {
@@ -7,28 +8,15 @@ let authController = {
     },
 
     register: (req, res) => {
-        // Check if user's email exists in database
-        let match = 0;
-        database.Database.forEach(user => {
-            if (user.email === req.query.email) {
-                console.log("Duplicate user email")
-                match = 1;
-            }
+        res.render("auth/register", {
+            email: req.query.email,
+            error: ''
         });
-        if (match == 1) {
-            // res.render("auth/login");
-            res.redirect("/");
-        } else {
-            res.render("auth/register", {
-                email: req.query.email,
-            });
-        }
     },
 
-    registerSubmit: (req, res) => {
+    registerSubmit: async (req, res) => {
         // Adding new user to database
-        const newUser = {     // Structure for the newly created user
-            id: database.Database.length + 1,
+        const newUserData = {     // Structure for the newly created user
             name: req.body.name,
             email: req.body.email,
             password: req.body.password,
@@ -36,11 +24,33 @@ let authController = {
             avatar: "",
         };
         // Fetch avatar for new user
-        newUser.avatar = `https://avatars.abstractapi.com/v1/?api_key=${process.env.Abstractapi_CLIENT_ID}&name=${encodeURIComponent(newUser.name)}&image_size=60&char_limit=2&background_color=335eea&font_color=ffffff&is_rounded=true&is_uppercase=true`
+        newUserData.avatar = `https://avatars.abstractapi.com/v1/?api_key=${process.env.Abstractapi_CLIENT_ID}&name=${encodeURIComponent(newUserData.name)}&image_size=60&char_limit=2&background_color=335eea&font_color=ffffff&is_rounded=true&is_uppercase=true`
 
-        database.Database.push(newUser);
-        update()
-        res.render("auth/login");
+        const newUser = new UserData(newUserData);
+        try {
+            await newUser.save();
+            res.render("auth/login")
+        } catch (err) {
+            if (err.code === 11000) { 
+                if (err.errmsg.includes('name')) {
+                    res.render("auth/register", {
+                        email: '',
+                        error: `username ${newUserData.name} is taken`
+                    })
+                } else if (err.errmsg.includes('email')) {
+                    res.render("auth/register", {
+                        email: '',
+                        error: `email ${newUserData.email} is used`
+                    })
+                }
+            } else { 
+                res.render("auth/register", {
+                    email: '',
+                    error: "error occurred when saving user"
+                })
+            }
+        }
+            
     },
 };
 

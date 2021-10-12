@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha test_routes.js --exit",
     "test-events": "jest --forceExit",
-    "start": "node index.js"
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -23,7 +23,7 @@
     "express-ejs-layouts": "^2.2.0",
     "express-session": "^1.17.1",
     "method-override": "^2.3.7",
-    "mongoose": "^4.7.7",
+    "mongoose": "^5.7.0",
     "node-fetch": "^2.6.1",
     "nodemon": "^1.19.4",
     "passport": "^0.4.1",

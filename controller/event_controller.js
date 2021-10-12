@@ -1,5 +1,5 @@
-let database = require("../database").Database;
-let update = require("../database").writeJSON;
+// const database = require("../database").Database;
+// const update = require("../database").writeJSON;
 const { calendarData, changeMonth } = require("../views/event/scripts/calendar")
 
 function sortTags(events) {
@@ -45,14 +45,14 @@ function formatDate(eventDateStr) {
 
 }
 
-let eventsController = {
+const eventsController = {
   // Display all events
   list: (req, res) => {
-    sortedTags = sortTags(req.user.events);
+    const sortedTags = sortTags(req.user.events);
     res.render("event/index", {
       user: req.user,
       events: req.user.events,
-      database: database,
+      // database: database,
       calendarData,
       sortedTags,
     });
@@ -91,7 +91,7 @@ let eventsController = {
         searchResultsDatabase.push(req.user.events[i]);
       }
     }
-    sortedTags = sortTags(searchResultsDatabase);
+    const sortedTags = sortTags(searchResultsDatabase);
     res.render("event/index", {
       user: req.user,
       events: searchResultsDatabase,
@@ -116,26 +116,7 @@ let eventsController = {
       tags: req.body.tags.split(",").map(item=>item.trim()),
       date: formatDate(req.body.date)  //req.body.date.replace("T", " "),
     };
-    // Use Unsplash API to fetch images for events. Stopped working. Hit API limit?
-    /*
-    const client_id = process.env.Unsplash_CLIENT_ID;
-    const photos = await fetch(
-      `https://api.unsplash.com/photos/random?query=${event.title}&client_id=${client_id}`
-    );
-
-    const parsedPhotos = await photos.json();
-
-    if ("errors" in parsedPhotos) {
-      console.log("ERROR: Cannot find image!");
-      event.image_url = "/event.svg";
-      req.user.events.push(event);
-    } else {
-      // Save the URL into event object
-      event.image_url = parsedPhotos.urls.regular;
-
-      req.user.events.push(event);
-    }
-    */
+   
     event.image_url = "/event.svg"
     req.user.events.push(event);
 
@@ -242,7 +223,7 @@ let eventsController = {
       }
     }
 
-    sortedTags = sortTags(filteredEvents);
+    const sortedTags = sortTags(filteredEvents);
     res.render("event/index", {
       user: req.user,
       events: filteredEvents,
@@ -264,7 +245,7 @@ let eventsController = {
       }
     }
 
-    sortedTags = sortTags(filteredEvents);
+    const sortedTags = sortTags(filteredEvents);
     res.render("event/index", {
       user: req.user,
       events: filteredEvents,
