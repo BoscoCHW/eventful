@@ -1,6 +1,7 @@
 // const database = require("../database").Database;
 // const update = require("../database").writeJSON;
-const { calendarData, changeMonth } = require("../views/event/scripts/calendar")
+const { calendarData, changeMonth } = require("../views/event/scripts/calendar");
+const UserData = require("../models/userDataModel");
 
 function sortTags(events) {
   // Returns a list all tags and their occurence count for displayed events
@@ -49,6 +50,7 @@ const eventsController = {
   // Display all events
   list: (req, res) => {
     const sortedTags = sortTags(req.user.events);
+    // console.log(req.user.events);
     res.render("event/index", {
       user: req.user,
       events: req.user.events,
@@ -75,7 +77,7 @@ const eventsController = {
       res.render("event/index", {
         user: req.user,
         events: req.user.events,
-        database: database,
+        // database: database,
       });
     }
   },
@@ -95,7 +97,7 @@ const eventsController = {
     res.render("event/index", {
       user: req.user,
       events: searchResultsDatabase,
-      database: database,
+      // database: database,
       calendarData,
       sortedTags,
     });
@@ -116,11 +118,13 @@ const eventsController = {
       tags: req.body.tags.split(",").map(item=>item.trim()),
       date: formatDate(req.body.date)  //req.body.date.replace("T", " "),
     };
-   
+    
     event.image_url = "/event.svg"
     req.user.events.push(event);
 
-    update()
+    const newUserData = await UserData.findByIdAndUpdate({_id: req.user._id}, req.user, {new: true, useFindAndModify: false})
+    // console.log(newUserData)
+    // console.log(req.user)
     res.redirect("/events");
   },
 
@@ -130,7 +134,6 @@ const eventsController = {
     const searchResult = req.user.events.find(function (event) {
       return event.id == eventToFind;
     });
-    // update()   // not necessary
     res.render("event/edit", { eventItem: searchResult });
   },
 
@@ -146,7 +149,7 @@ const eventsController = {
         event.date = formatDate(req.body.date)  // req.body.date.replace("T", " ");
       }
     });
-    update()
+    UserData.findByIdAndUpdate({_id: req.user._id}, req.user, {new: true, useFindAndModify: false})
     res.redirect("/event/" + req.params.id);
   },
 
@@ -227,7 +230,7 @@ const eventsController = {
     res.render("event/index", {
       user: req.user,
       events: filteredEvents,
-      database: database,
+      // database: database,
       calendarData,
       sortedTags,
     });
@@ -249,7 +252,7 @@ const eventsController = {
     res.render("event/index", {
       user: req.user,
       events: filteredEvents,
-      database: database,
+      // database: database,
       calendarData,
       sortedTags,
     });

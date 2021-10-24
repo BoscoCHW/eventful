@@ -60,22 +60,25 @@
                     <div class="calendar-number">
                     <a href=<%="/events/date/" + dateString %>> <%= i %> </a>
                 <% } %>
-
-                        <div class="events">
-                            <%  let eventsOfTheDay = []
-                                events.forEach(function (eventItem) {
-                                    let date = new Date(eventItem.date) 
-                                    let dateStrTokens = date.toLocaleString('en-GB', {dateStyle: "full"}).split(' ')
+                        
+                <div class="events">
+                            <%  let eventsOfTheDay = []; 
+   
+                                events.forEach(function (eventItem) { 
+                                let date = new Date(eventItem.date);  
+                                let dateStrTokens = date.toLocaleString('en-GB', {dateStyle: "full"}).split(' ');
                                     if (dateStrTokens[2] + dateStrTokens[1] + dateStrTokens[3] === calendarData.shownDate.month + String(i) + calendarData.shownDate.year) {
-                                        let newEvent = { ...eventItem }
-                                        if (newEvent.title.length > 15) {
-                                            newEvent.title = newEvent.title.slice(0,12) + '...'
-                                        }
-                                        eventsOfTheDay.push(newEvent)}}) %>
+                              
+                                        if (eventItem.title.length > 15) {
+                                           eventItem.title = eventItem.title.slice(0,12) + '...';
+                                        } 
+                                        eventsOfTheDay.push(eventItem)}}) %>
+                                        
+                                    
                             <% if (eventsOfTheDay.length > 2) { %>
                                 <div><a href="/events/date/<%= dateString %>"><%= eventsOfTheDay.length %> events</a></div>
-                                <% } else { 
-                                    for (event of eventsOfTheDay) { %>
+                                <% } else {  %>
+                                    <%  for (event of eventsOfTheDay) { %>
                                         <% if (event.importance === '1') { %>
                                             <div><a href="/event/<%= event.id%>" class="badge badge-secondary"><%= event.title %></a></div>
                                         <% } else if (event.importance === '2') { %>
@@ -89,7 +92,7 @@
                                         <% } else { %>
                                             <div><a href="/event/<%= event.id%>"><%= event.title %></a></div>
                                 <% }}} %>
-                        </div>
+                        </div>  
                     </div>
 
 

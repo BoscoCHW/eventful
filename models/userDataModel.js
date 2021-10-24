@@ -6,7 +6,17 @@ const userDataSchema = new Schema({
     name: { type: String, unique: true },
     email: { type: String, unique: true },
     password: { type: String },
-	events: { type : Array , "default" : [] }	,
+	events: [ {
+        id: { type: String },
+        title: { type: String },
+        description: { type: String},
+        importance: { type: String },
+		image_url: { type: String },
+		tags: [
+            { type: String }
+        ],
+		date: { type: String }
+    }]	,
     avatar: { type: String }
 })
 
