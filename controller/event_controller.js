@@ -50,11 +50,9 @@ const eventsController = {
   // Display all events
   list: (req, res) => {
     const sortedTags = sortTags(req.user.events);
-    // console.log(req.user.events);
     res.render("event/index", {
       user: req.user,
       events: req.user.events,
-      // database: database,
       calendarData,
       sortedTags,
     });
@@ -77,7 +75,6 @@ const eventsController = {
       res.render("event/index", {
         user: req.user,
         events: req.user.events,
-        // database: database,
       });
     }
   },
@@ -97,7 +94,6 @@ const eventsController = {
     res.render("event/index", {
       user: req.user,
       events: searchResultsDatabase,
-      // database: database,
       calendarData,
       sortedTags,
     });
@@ -123,8 +119,6 @@ const eventsController = {
     req.user.events.push(event);
 
     const newUserData = await UserData.findByIdAndUpdate({_id: req.user._id}, req.user, {new: true, useFindAndModify: false})
-    // console.log(newUserData)
-    // console.log(req.user)
     res.redirect("/events");
   },
 
@@ -161,7 +155,6 @@ const eventsController = {
     let index = -1;
     for (let i = 0; i < req.user.events.length; i++) {
       if (req.user.events[i].id === eventToFind) {
-        //console.log(i);
         index = i;
         break;
       }
@@ -230,7 +223,6 @@ const eventsController = {
     res.render("event/index", {
       user: req.user,
       events: filteredEvents,
-      // database: database,
       calendarData,
       sortedTags,
     });
@@ -252,7 +244,6 @@ const eventsController = {
     res.render("event/index", {
       user: req.user,
       events: filteredEvents,
-      // database: database,
       calendarData,
       sortedTags,
     });

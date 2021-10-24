@@ -1,5 +1,3 @@
-// let database = require("../database");
-// let update = require("../database").writeJSON;
 const UserData = require("../models/userDataModel");
 
 let authController = {
